@@ -28,6 +28,7 @@ namespace B32.src.assembler
         }
         public GUI()
         {
+            LabelTable = new System.Collections.Hashtable(50); CurrentNdx = 0; AsLength = 0; ExecutionAddress = 0; IsEnd = false; SourceProgram = ""; txtOrigin.Text = "1000";   
             InitializeComponent();
         }
 
@@ -45,7 +46,26 @@ namespace B32.src.assembler
 
         private void btnAssemble_Click(object sender, EventArgs e)
         {
-
+            AsLength = Convert.ToUInt16(this.txtOrigin.Text, 16);
+            System.IO.BinaryWriter output;
+            System.IO.TextReader input;
+            System.IO.FileStream fs = new
+            System.IO.FileStream(this.txtOutputFileName.Text, System.IO.FileMode.Create);
+            output = new System.IO.BinaryWriter(fs);
+            input = System.IO.File.OpenText(this.txtSourceFileName.Text);
+            SourceProgram = input.ReadToEnd();
+            input.Close();
+            output.Write('B');
+            output.Write('3');
+            output.Write('2');
+            output.Write(Convert.ToUInt16(this.txtOrigin.Text, 16));
+            output.Write((ushort)0);
+            Parse(output);
+            output.Seek(5, System.IO.SeekOrigin.Begin);
+            output.Write(ExecutionAddress);
+            output.Close();
+            fs.Close();
+            MessageBox.Show("Done!"); 
         }
     }
 }
