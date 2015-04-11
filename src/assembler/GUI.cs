@@ -67,5 +67,57 @@ namespace B32.src.assembler
             fs.Close();
             MessageBox.Show("Done!"); 
         }
+
+        private void Parse(System.IO.BinaryWriter OutputFile)
+        {
+            CurrentNdx = 0;
+            while (IsEnd == false)
+                LabelScan(OutputFile, true);
+            IsEnd = false;
+            CurrentNdx = 0;
+            AsLength = Convert.ToUInt16(this.txtOrigin.Text, 16);
+
+            while (IsEnd == false)
+                LabelScan(OutputFile, false);
+        }
+        private void LabelScan(System.IO.BinaryWriter OutputFile, bool IsLabelScan)
+        {
+            if (char.IsLetter(SourceProgram[CurrentNdx]))
+            {
+                // Must be a label
+                if (IsLabelScan) LabelTable.Add(GetLabelName(), AsLength);
+                while (SourceProgram[CurrentNdx] != '\n')
+                    CurrentNdx++;
+                CurrentNdx++;
+                return;
+            }
+            EatWhiteSpaces();
+            ReadMneumonic(OutputFile, IsLabelScan);
+        }
+        private void ReadMneumonic(System.IO.BinaryWriter OutputFile, bool IsLabelScan)
+        {
+            string Mneumonic = "";
+            while (!(char.IsWhiteSpace(SourceProgram[CurrentNdx])))
+            {
+                Mneumonic = Mneumonic + SourceProgram[CurrentNdx];
+                CurrentNdx++;
+            }
+
+            if (Mneumonic.ToUpper() == "LDX") InterpretLDX(OutputFile, IsLabelScan);
+            if (Mneumonic.ToUpper() == "LDA") InterpretLDA(OutputFile, IsLabelScan);
+            if (Mneumonic.ToUpper() == "STA") InterpretSTA(OutputFile, IsLabelScan);
+            if (Mneumonic.ToUpper() == "END")
+            {
+                IsEnd = true;
+                DoEnd(OutputFile, IsLabelScan);
+                EatWhiteSpaces();
+                ExecutionAddress = (ushort)LabelTable[(GetLabelName())]; return;
+            }
+            while (SourceProgram[CurrentNdx] != '\n')
+            {
+                CurrentNdx++;
+            }
+            CurrentNdx++;
+        }
     }
 }
