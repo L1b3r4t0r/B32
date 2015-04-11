@@ -119,5 +119,21 @@ namespace B32.src.assembler
             }
             CurrentNdx++;
         }
+        private void InterpretLDA(System.IO.BinaryWriter OutputFile, bool IsLabelScan)
+        {
+            EatWhiteSpaces();
+            if (SourceProgram[CurrentNdx] == '#')
+            {
+                CurrentNdx++;
+                byte val = ReadByteValue();
+                AsLength += 2;
+                if (!IsLabelScan)
+                {
+                    OutputFile.Write((byte) 0x01);
+                    OutputFile.Write(val);
+                }
+            }
+        }
+
     }
 }
