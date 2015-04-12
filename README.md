@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/matheusxaviersi/B32.png?label=ready&title=Ready)](https://waffle.io/matheusxaviersi/B32)
 B32 VM
 ---------------
 
