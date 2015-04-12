@@ -1,6 +1,6 @@
 Mnemonics documentation
 -------------------
-mnemonic | meaning | argument | bytecode |
+mnemonic | meaning | argument | byte code |
 :--------|:--------|:--------:|---------:|
 LDA | Assign a value to the A register | {value} | $01
 LDX | Assign a value to the X register | {value} | $02
